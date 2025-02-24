@@ -1,0 +1,18 @@
+{% extends "layout.html" %}
+
+{% block content %}
+    <h2>Productos Disponibles</h2>
+    <div class="productos-container">
+        {% for producto in productos %}
+            <div class="producto-card">
+                <img src="{{ producto['imagen'] }}" alt="{{ producto['nombre'] }}">
+                <h3>{{ producto['nombre'] }}</h3>
+                <p><strong>Precio:</strong> {{ producto['precio'] }}</p>
+                <p><strong>Descripción:</strong> {{ producto['descripcion'] }}</p>
+                <a href="{{ url_for('main.ver_producto', producto_id=producto['id']) }}" class="comentarios-link">
+                    Ver detalles y comentar
+                </a>
+            </div>
+        {% endfor %}
+    </div>
+{% endblock %}

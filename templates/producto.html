@@ -1,0 +1,43 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<div class="producto-container">
+    <div class="producto-detalle">
+        <h2>{{ producto['nombre'] }}</h2>
+        <img src="{{ producto['imagen'] }}" alt="{{ producto['nombre'] }}">
+        <p><strong>Precio:</strong> {{ producto['precio'] }}</p>
+        <p><strong>Descripción:</strong> {{ producto['descripcion'] }}</p>
+    </div>
+
+    <div class="comentarios-section">
+        <h3>Deja tu comentario</h3>
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="flash {{ category }}">{{ message }}</div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+
+        <form method="POST" class="comentarios-form">
+            <label for="usuario">Nombre:</label>
+            <input type="text" id="usuario" name="usuario" required>
+
+            <label for="comentario">Comentario:</label>
+            <textarea id="comentario" name="comentario" required></textarea>
+
+            <button type="submit">Enviar Comentario</button>
+        </form>
+
+        <h3>Comentarios</h3>
+        <div class="comentarios-container">
+            {% for comentario in comentarios %}
+                <div class="comentario">
+                    <strong>{{ comentario['usuario'] }}</strong> <span>({{ comentario['fecha'] }})</span>
+                    <p>{{ comentario['comentario'] }}</p>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endblock %}

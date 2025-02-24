@@ -1,0 +1,27 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<div class="login-container">
+    <h2>Iniciar Sesión - Administrador</h2>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            {% for category, message in messages %}
+                <div class="flash {{ category }}">{{ message }}</div>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+
+    <form method="POST">
+        <label for="username">Usuario:</label>
+        <input type="text" id="username" name="username" required>
+
+        <label for="password">Contraseña:</label>
+        <input type="password" id="password" name="password" required>
+
+        <button type="submit">Iniciar Sesión</button>
+    </form>
+	
+	<p>¿Quieres una cuenta? <a href="{{ url_for('main.register') }}">Crea una cuenta aquí</a></p>
+</div>
+{% endblock %}

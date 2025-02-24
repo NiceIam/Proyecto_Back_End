@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tienda Virtual de Tecnología</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script> <!-- Íconos -->
+</head>
+<body>
+<header>
+    <h1>Tienda Virtual de Tecnología</h1>
+    <nav>
+        <a href="{{ url_for('main.index') }}">Inicio</a>
+    </nav>
+
+    <div class="user-menu">
+        {% if session.get('admin') %}
+            <div class="user-info" onclick="toggleMenu()">
+                <i class="fas fa-user"></i> <span>Administrador</span>
+            </div>
+            <div id="dropdown-menu" class="dropdown-menu">
+                <a href="{{ url_for('main.logout') }}" class="logout-button">Cerrar Sesión</a>
+            </div>
+        {% else %}
+            <a href="{{ url_for('main.login') }}" class="login-button">Iniciar Sesión</a>
+        {% endif %}
+    </div>
+	<!-- Modal de notificación -->
+<!--	<div id="notificationModal" class="modal">-->
+<!--		<div class="modal-content">-->
+<!--			<span class="close" onclick="closeModal()">&times;</span>-->
+<!--			<p id="modalMessage">Bienvenido</p> &lt;!&ndash; Aquí se mostrará el mensaje &ndash;&gt;-->
+<!--		</div>-->
+<!--	</div>-->
+
+
+</header>
+
+<main>
+    {% block content %}{% endblock %}
+</main>
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+    var messages = {{ get_flashed_messages(with_categories=true) | tojson }};
+    console.log("DEBUG: Mensajes Flash recibidos en JavaScript:", messages);  // Log en consola
+
+    var modal = document.getElementById("notificationModal");
+    var modalMessage = document.getElementById("modalMessage");
+
+    if (messages.length > 0) {
+        var successMessage = messages.find(msg => msg[0] === "success");
+        if (successMessage && successMessage[1]) {
+            modalMessage.innerText = successMessage[1]; // Inserta el mensaje correcto
+            modal.style.display = "flex";
+
+            // Cierra el modal automáticamente después de 3 segundos
+            setTimeout(closeModal, 3000);
+
+            // Limpia los mensajes flash después de mostrarlos
+            fetch("{{ url_for('main.clear_flash') }}", { method: "POST" })
+                .then(response => console.log("DEBUG: Mensajes flash limpiados correctamente"))
+                .catch(error => console.error("ERROR limpiando mensajes flash:", error));
+        }
+    }
+});
+
+function closeModal() {
+    document.getElementById("notificationModal").style.display = "none";
+}
+</script>
+
+
+
+</body>
+</html>
